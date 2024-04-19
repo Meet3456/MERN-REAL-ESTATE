@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+// useDispatch is used to dispatch actions to the Redux store, and useSelector is used to select data from the Redux store.
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -16,7 +25,7 @@ export default function SignIn() {
     e.preventDefault();
     try {
       // start loading:
-      setLoading(true);
+      dispatch(signInStart());
 
       // send the form data to the backend For signin verification of user , to check whether corresponding email and password is present in the database or not:
       const res = await fetch("/api/auth/signin", {
@@ -31,18 +40,15 @@ export default function SignIn() {
 
       // if the response is not successful, set the error message and stop the loading:
       if (data.success === false) {
-        setLoading(false);
-        setError(data.message);
+        dispatch(signInFailure(data.message));
         return;
       }
 
       // if the response is successful, stop the loading and set the error to 'null' and navigate to home
-      setLoading(false);
-      setError(null);
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
 
@@ -69,7 +75,7 @@ export default function SignIn() {
           disabled={loading}
           className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
         >
-          {loading ? "Loading..."  : "Sign In"}
+          {loading ? "Loading..." : "Sign In"}
         </button>
       </form>
       <div className='flex gap-2 mt-5'>
