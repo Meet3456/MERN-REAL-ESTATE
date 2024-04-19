@@ -5,7 +5,7 @@ export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   // handleChange function is used to update the state of the form data whenever the user types in the input fields. It takes an event object as an argument and updates the state of the form data with the new value of the input field. The id of the input field is used as the key to update the corresponding value in the form data state.
   const handleChange = (e) => {
