@@ -17,15 +17,17 @@ const persistConfig = {
   version: 1,
 };
 
-// persistReducer is used to create a new reducer with persistence capabilities. It takes the persistConfig and the rootReducer as arguments.
+// persistReducer is used to create a new reducer with persistence capabilities. It takes the persistConfig and the rootReducer(which contains all the reducers) as arguments.
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// configureStore is used to create a Redux store with the given reducer. In this case, we are using the persistedReducer as the reducer for the store.
 export const store = configureStore({
   reducer: persistedReducer,
-  // disabling the serializableCheck middleware to avoid the error of serializing the user object:
 
+  // disabling the serializableCheck middleware to avoid the error of serializing the user object:
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
 });
 
+// persistStore is used to create a persistor object that can be used to persist the Redux store. It takes the store as an argument.
 export const persistor = persistStore(store);
