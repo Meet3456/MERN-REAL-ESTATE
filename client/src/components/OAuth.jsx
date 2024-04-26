@@ -14,6 +14,7 @@ export default function OAuth() {
 
       // result will contain the user data after successful login
       const result = await signInWithPopup(auth, provider);
+      
       // sending the user data to the backend for further processing (creating profile page)
       const res = await fetch("api/auth/google", {
         method: "POST",
